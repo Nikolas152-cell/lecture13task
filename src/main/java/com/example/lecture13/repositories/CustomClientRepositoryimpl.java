@@ -22,16 +22,18 @@ public class CustomClientRepositoryimpl implements CustomClientRepository{
        List<Client> clientList = clientRepository.findAll();
        Map<String, Integer> top10 = new TreeMap<>();
         for (Client client: clientList) {
-            if(top10.containsKey(client.getFirstName()))
-            {
-                top10.computeIfPresent(client.getFirstName(), (k,v) -> v+1);
+            if (client.isPep()) {
+                if (top10.containsKey(client.getFirstName())) {
+                    top10.computeIfPresent(client.getFirstName(), (k, v) -> v + 1);
+                } else {
+                    top10.put(client.getFirstName(), 1);
+                }
             }
             else{
-                top10.put(client.getFirstName(),1);
+                continue;
             }
         }
-         top10.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry
-                .comparingByValue()));
+
         return top10.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .limit(10)
